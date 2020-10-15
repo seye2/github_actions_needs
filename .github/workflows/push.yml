@@ -23,7 +23,8 @@ jobs:
 
       - name: env test
         run: echo "CONTEXT=$(echo ${GITHUB_CONTEXT} | sed 's/"//g')" >> $GITHUB_ENV
-        GITHUB_CONTEXT: ${{ toJson(github.event.commits[github.event.commits.length-1].message) }}
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github.event.commits[github.event.commits.length-1].message) }}
       
       - name: env test1
         run: echo "$CONTEXT"
