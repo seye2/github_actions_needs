@@ -21,6 +21,12 @@ jobs:
             ${{ runner.OS }}-build-
             ${{ runner.OS }}-
 
+      - name: env test
+        run: echo "CONTEXT=$(echo ${GITHUB_CONTEXT} | sed 's/"//g')" >> $GITHUB_ENV
+      
+      - name: env test1
+        run: echo "$CONTEXT"
+
       - name: Install Dependencies    # 의존 파일 설치
         run: npm install
 
@@ -44,6 +50,7 @@ jobs:
 
       - name: Deploy                  # S3에 배포하기
         env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
@@ -67,6 +74,7 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
+          echo "CONTEXT=$(echo ${GITHUB_CONTEXT} | sed 's/"//g')" >> $GITHUB_ENV
           aws s3 cp \
             --recursive \
             --region ap-northeast-2 \
